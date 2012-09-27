@@ -7,6 +7,8 @@ import java.util.Iterator;
 import me.Laubi.MineMaze.Addons.MazeGenerators.MazeGeneratorHolder;
 import me.Laubi.MineMaze.Addons.SubCommands.SubCommand;
 import me.Laubi.MineMaze.Addons.SubCommands.SubCommandHolder;
+import me.Laubi.MineMaze.Exceptions.MineMazeException;
+import me.Laubi.MineMaze.Exceptions.PermissionException;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -85,36 +87,57 @@ public class SubCommands {
                 holder = plugin.getMazeCollector().getRandomEntry();
             }
             
-            if(holder == null){
-                throw new Exception("Could not find the choosen mazegenerator");
+            if(holder == null) 
+                throw new MineMazeException("Could not find the choosen mazegenerator");
+            
+            if((player instanceof BukkitPlayer) && !((BukkitPlayer)player).getPlayer().isOp()){
+                throw new PermissionException();
             }
             
-            if((player instanceof BukkitPlayer) && !((BukkitPlayer)player).getPlayer().isOp()){ //TODO: implement Permission api
-                throw new Exception("You are not allowed to use this command!");
-            }
+            if(!holder.validateRegion(r)) 
+                throw new MineMazeException("Your selection doesn't fit the requirements!");
             
-            if(!holder.validateRegion(r)){
-                throw new Exception("Your selection doesn't fit the requirements!");
-            }
+            try{
+                Maze maze = holder.invoke(player, handler, we, r);
             
-            Maze maze = holder.invoke(player, handler, we, r);
-            
-            EditSession edit = session.createEditSession(player);
-            
-            for(int x = 0; x < maze.getWidth(); x++){
-                for(int y = 0; y < maze.getHeight(); y++){
-                    for(int z = 0; z < maze.getLength(); z++){
-                        Vector v = new Vector(x,y,z);
-                        edit.setBlock(r.getMinimumPoint().add(v), maze.get(v));
+                EditSession edit = session.createEditSession(player);
+                edit.enableQueue();
+                session.tellVersion(player);
+
+                for(int x = 0; x < maze.getWidth(); x++){
+                    for(int y = 0; y < maze.getHeight(); y++){
+                        for(int z = 0; z < maze.getLength(); z++){
+                            Vector v = new Vector(x,y,z);
+                            edit.setBlock(r.getMinimumPoint().add(v), maze.get(v));
+                        }
                     }
                 }
+                session.remember(edit);
+                edit.flushQueue();
+                we.flushBlockBag(player, edit);
+            }catch(Exception e){
+                throw e.getCause();
             }
-            
-            session.remember(edit);
-        }catch(NullPointerException e){
-            //Do nothing.
-        }catch(Exception e){
-            player.printError("Could not generate the maze: " + e.getMessage());
+        }catch(PermissionException e){
+            player.printError("You don't have permission to do this.");
+        }catch(IncompleteRegionException e){
+            player.printError("Make a region selection first.");
+        }catch(NumberFormatException e){
+            player.printError("Number expected; string given.");
+        }catch(MaxChangedBlocksException e){
+            player.printError("Max blocks changed in an operation reached (" + e.getBlockLimit() + ").");
+        } catch (UnknownItemException e) {
+            player.printError("Block name '" + e.getID() + "' was not recognized.");
+        } catch (InvalidItemException e) {
+            player.printError(e.getMessage());
+        } catch (DisallowedItemException e) {
+            player.printError("Block '" + e.getID() + "' not allowed (see WorldEdit configuration).");
+        }catch(MineMazeException e){
+            player.printError(e.getMessage());
+        }catch(Throwable e){
+            player.printError("Please report this error: [See console]");
+            player.printRaw(e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
