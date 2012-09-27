@@ -31,7 +31,7 @@ public class BasicMazes {
     }
     
     @MazeGenerator(
-            alias = {"primsc", "primschaotic"},
+            alias = "primsc",
             fullName = "Prims Chaotic Maze Generator",
             author = "Laubi",
             permission = "primsc"
@@ -41,7 +41,7 @@ public class BasicMazes {
     }
     
     @MazeGenerator(
-            alias = {"dfs", "deepfirstsearch"},
+            alias = "dfs",
             fullName = "DeepFirstSearch Maze Generator",
             author = "Laubi",
             permission = "dfs"
@@ -51,7 +51,7 @@ public class BasicMazes {
     }
     
     @MazeGenerator(
-            alias = {"dfsc", "deepfirstsearchchaos"},
+            alias = "dfsc",
             fullName = "DeepFirstSearch Chaotic Maze Generator",
             author = "Laubi",
             permission = "dfsc"
