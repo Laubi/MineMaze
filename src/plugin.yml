@@ -1,0 +1,12 @@
+name: MineMaze
+version: 2.0
+main: me.Laubi.MineMaze.MineMazePlugin
+author: Laubi
+
+depend: [WorldEdit]
+
+
+commands:
+    /maze:
+        useage: "/maze [args]"
+        description: "blub"
