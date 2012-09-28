@@ -120,18 +120,22 @@ public class SubCommands {
                 EditSession edit = session.createEditSession(player);
                 edit.enableQueue();
                 session.tellVersion(player);
-
+                int affected = 0;
+                
                 for(int x = 0; x < maze.getWidth(); x++){
                     for(int y = 0; y < maze.getHeight(); y++){
                         for(int z = 0; z < maze.getLength(); z++){
                             Vector v = new Vector(x,y,z);
-                            edit.setBlock(r.getMinimumPoint().add(v), maze.get(v));
+                            if(edit.setBlock(r.getMinimumPoint().add(v), maze.get(v))){
+                                affected++;
+                            }
                         }
                     }
                 }
                 session.remember(edit);
                 edit.flushQueue();
                 we.flushBlockBag(player, edit);
+                player.print(affected + " block(s) have been changed.");
             }catch(Exception e){
                 throw e.getCause();
             }
