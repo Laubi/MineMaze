@@ -36,7 +36,7 @@ public class SubCommands {
     @SubCommand(
             alias = "help",
             console = true,
-            permission = "help",
+            permission = "worldedit.minemaze.help",
             author = "Laubi",
             description = "You need help? Here you get it!"
     )
@@ -58,7 +58,7 @@ public class SubCommands {
     @SubCommand(
             alias = "list",
             console = true,
-            permission = "listmazes",
+            permission = "worldedit.minemaze.list",
             author = "Laubi",
             description = "List all aviable MazeGenerators"
     )
@@ -85,7 +85,7 @@ public class SubCommands {
     
     @SubCommand(
             alias = "maze",
-            permission = "generate",
+            permission = "worldedit.minemaze.generate",
             author = "Laubi",
             description = "Create you own maze"
     )
