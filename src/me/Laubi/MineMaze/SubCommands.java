@@ -107,10 +107,6 @@ public class SubCommands {
             if(holder == null) 
                 throw new MineMazeException("Could not find the choosen mazegenerator");
             
-            if((player instanceof BukkitPlayer) && !((BukkitPlayer)player).getPlayer().isOp()){
-                throw new PermissionException();
-            }
-            
             if(!holder.validateRegion(r)) 
                 throw new MineMazeException("Your selection doesn't fit the requirements!");
             
@@ -139,8 +135,6 @@ public class SubCommands {
             }catch(Exception e){
                 throw e.getCause();
             }
-        }catch(PermissionException e){
-            player.printError("You don't have permission to do this.");
         }catch(IncompleteRegionException e){
             player.printError("Make a region selection first.");
         }catch(NumberFormatException e){

@@ -18,7 +18,12 @@
 package me.Laubi.MineMaze;
 
 import com.sk89q.worldedit.LocalPlayer;
+import com.sk89q.worldedit.bukkit.BukkitConfiguration;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import me.Laubi.MineMaze.Addons.SubCommands.SubCommandHolder;
+import me.Laubi.MineMaze.Exceptions.ConsoleForbiddenException;
+import me.Laubi.MineMaze.Exceptions.PermissionException;
+import me.Laubi.MineMaze.Exceptions.SubCommandNotFoundException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,21 +48,27 @@ public class MazeCommandExecutor implements CommandExecutor{
             SubCommandHolder subCommand = this.plugin.getSubCollector().getEntry(cmdHandler.getSubCommand());
             
             if(subCommand == null){
-                throw new Exception("Cannot find the subcommand '" + cmdHandler.getSubCommand() + "'!");
+                throw new SubCommandNotFoundException(cmdHandler.getSubCommand());
+            }
+            if(!player.isPlayer() && !subCommand.isConsoleAllowed()){
+                throw new ConsoleForbiddenException();
             }
             
-            if(subCommand.isConsoleAllowed() == false && player.isPlayer() == false){
-                throw new Exception("Only a player is allowed to use this command!");
-            }
-            
-            if(false){ //TODO: Add permissioncheck
-                throw new Exception("You are not allowed to use this command!");
+            if(!player.hasPermission(subCommand.getPermission())){
+                throw new PermissionException(subCommand.getPermission());
             }
             
             subCommand.invoke(player, cmdHandler, plugin);
-        
-        }catch(Exception e){
-            player.printError(e.getMessage());
+        }catch(PermissionException e){
+            player.printError("You are not allowed to use this command!");
+        }catch(ConsoleForbiddenException e){
+            player.printError("Only a player is allowed to use this command!");
+        }catch(SubCommandNotFoundException e){
+            player.printError("Couldn't find the subcommand '" + e.getSubCommand()+"'!");
+        }catch(Throwable e){
+            player.printError("Please report this error: [See console]");
+            player.printRaw(e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
         }
         
         return true;
