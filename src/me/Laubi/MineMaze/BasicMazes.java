@@ -38,37 +38,41 @@ public class BasicMazes {
 
     private static final BaseBlock airBlock = new BaseBlock(BlockID.AIR);
 
-    @MazeGenerator(alias = "prims",
-    fullName = "Prims Maze Generator",
-    author = "Laubi",
-    permission = "prims")
+    @MazeGenerator(
+            alias = "prims",
+            fullName = "Prims Maze Generator",
+            author = "Laubi"
+    )
     public static Maze prims(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
             throws UnknownItemException, DisallowedItemException {
         return genBasicMaze(player, handler, we, region, new Prims(region.getWidth(), region.getLength()));
     }
 
-    @MazeGenerator(alias = "primsc",
-    fullName = "Prims Chaotic Maze Generator",
-    author = "Laubi",
-    permission = "primsc")
+    @MazeGenerator(
+            alias = "primsc",
+            fullName = "Prims Chaotic Maze Generator",
+            author = "Laubi"
+    )
     public static Maze primsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
             throws UnknownItemException, DisallowedItemException {
         return genBasicMaze(player, handler, we, region, new PrimsChaos(region.getWidth(), region.getLength()));
     }
 
-    @MazeGenerator(alias = "dfs",
-    fullName = "DeepFirstSearch Maze Generator",
-    author = "Laubi",
-    permission = "dfs")
+    @MazeGenerator(
+            alias = "dfs",
+            fullName = "DeepFirstSearch Maze Generator",
+            author = "Laubi"
+    )
     public static Maze dfs(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
             throws UnknownItemException, DisallowedItemException {
         return genBasicMaze(player, handler, we, region, new DeepFirstSearch(region.getWidth(), region.getLength()));
     }
 
-    @MazeGenerator(alias = "dfsc",
-    fullName = "DeepFirstSearch Chaotic Maze Generator",
-    author = "Laubi",
-    permission = "dfsc")
+    @MazeGenerator(
+            alias = "dfsc",
+            fullName = "DeepFirstSearch Chaotic Maze Generator",
+            author = "Laubi"
+    )
     public static Maze dfsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
             throws UnknownItemException, DisallowedItemException {
         return genBasicMaze(player, handler, we, region, new DeepFirstSearchChaos(region.getWidth(), region.getLength()));

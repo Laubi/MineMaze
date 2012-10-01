@@ -46,9 +46,6 @@ public class MazeGeneratorHolder {
     public String getAuthor(){
         return this.getAnnotation().author();
     }
-    public String getPermission(){
-        return this.getAnnotation().permission();
-    }
     public String getFullName(){
         return this.getAnnotation().fullName();
     }

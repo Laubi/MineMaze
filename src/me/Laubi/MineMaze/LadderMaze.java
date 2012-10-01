@@ -46,11 +46,11 @@ public class LadderMaze {
         NE, NW, SE, SW
     }
 
-    @MazeGenerator(alias = {"ladder", "laddermaze"},
-    fullName = "Laddermaze Generator",
-    author = "Laubi",
-    permission = "ladder",
-    minHeight = 5)
+    @MazeGenerator(
+            alias = {"ladder", "laddermaze"},
+            fullName = "Laddermaze Generator",
+            author = "Laubi",
+            minHeight = 5)
     public static Maze prims(LocalPlayer player, CommandHandler h, WorldEdit we, Region region) throws UnknownItemException, DisallowedItemException, MineMazeException {
         Maze maze = new Maze(region);
         Corner firstLadderCorner = null;
