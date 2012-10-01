@@ -30,7 +30,7 @@ public @interface MazeGenerator {
     String []alias();
     
     String author() default "[unknown]";
-    String permission() default "";
+    String permission();
     
     int minHeight() default 1;
     int minLength() default 5;

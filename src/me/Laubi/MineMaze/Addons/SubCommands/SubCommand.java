@@ -29,7 +29,7 @@ public @interface SubCommand {
     String []alias();
     
     boolean console() default false;
-    String permission() default "";
+    String permission();
     String author() default "[unknown]";
     String description() default  "[No description]";
 }
