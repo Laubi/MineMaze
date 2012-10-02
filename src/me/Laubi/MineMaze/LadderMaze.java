@@ -17,6 +17,7 @@
 
 package me.Laubi.MineMaze;
 
+import me.Laubi.MineMaze.Interfaces.SizeValidation;
 import com.sk89q.worldedit.DisallowedItemException;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.UnknownItemException;
@@ -27,7 +28,7 @@ import com.sk89q.worldedit.patterns.Pattern;
 import com.sk89q.worldedit.patterns.SingleBlockPattern;
 import com.sk89q.worldedit.regions.Region;
 import java.awt.Point;
-import me.Laubi.MineMaze.Addons.MazeGenerators.MazeGenerator;
+import me.Laubi.MineMaze.Interfaces.MazeGenerator;
 import me.Laubi.MineMaze.Exceptions.MineMazeException;
 import me.Laubi.MineMaze.MazeGens.DeepFirstSearch;
 import me.Laubi.MineMaze.MazeGens.Prims;
@@ -49,8 +50,11 @@ public class LadderMaze {
     @MazeGenerator(
             alias = {"ladder", "laddermaze"},
             fullName = "Laddermaze Generator",
-            author = "Laubi",
-            minHeight = 5)
+            author = "Laubi")
+    @SizeValidation(
+            minHeight = 6,
+            minWidth = 5,
+            minLength = 5)
     public static Maze prims(LocalPlayer player, CommandHandler h, WorldEdit we, Maze maze) throws UnknownItemException, DisallowedItemException, MineMazeException {
         Corner firstLadderCorner = null;
 

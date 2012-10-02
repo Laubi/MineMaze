@@ -18,9 +18,8 @@
 package me.Laubi.MineMaze;
 
 import com.sk89q.worldedit.LocalPlayer;
-import com.sk89q.worldedit.bukkit.BukkitConfiguration;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import me.Laubi.MineMaze.Addons.SubCommands.SubCommandHolder;
+import java.lang.reflect.Method;
+import me.Laubi.MineMaze.Interfaces.SubCommand;
 import me.Laubi.MineMaze.Exceptions.ConsoleForbiddenException;
 import me.Laubi.MineMaze.Exceptions.PermissionException;
 import me.Laubi.MineMaze.Exceptions.SubCommandNotFoundException;
@@ -45,20 +44,21 @@ public class MazeCommandExecutor implements CommandExecutor{
         try{
             CommandHandler cmdHandler = new CommandHandler(strings);
 
-            SubCommandHolder subCommand = this.plugin.getSubCollector().getEntry(cmdHandler.getSubCommand());
+            Method subCommand = this.plugin.getSubCommandByAlias(cmdHandler.getSubCommand());
+            SubCommand subCmd = subCommand.getAnnotation(SubCommand.class);
             
             if(subCommand == null){
                 throw new SubCommandNotFoundException(cmdHandler.getSubCommand());
             }
-            if(!player.isPlayer() && !subCommand.isConsoleAllowed()){
+            if(!player.isPlayer() && !subCmd.console()){
                 throw new ConsoleForbiddenException();
             }
             
-            if(!player.hasPermission(subCommand.getPermission())){
-                throw new PermissionException(subCommand.getPermission());
+            if(!player.hasPermission(subCmd.permission())){
+                throw new PermissionException(subCmd.permission());
             }
             
-            subCommand.invoke(player, cmdHandler, plugin);
+            subCommand.invoke(null, player, cmdHandler, plugin);
         }catch(PermissionException e){
             player.printError("You are not allowed to use this command!");
         }catch(ConsoleForbiddenException e){

@@ -15,21 +15,19 @@
  *
  */
 
-package me.Laubi.MineMaze.Addons;
+package me.Laubi.MineMaze.Interfaces;
 
-import java.util.Iterator;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  *
  * @author Laubi
  */
-public interface AddonCollector<C>{
-    public C getEntry(String alias);
-    public C getRandomEntry();
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MazeGenerator {
+    String fullName();
+    String []alias();
     
-    public void registerMethods(Class<?> clazz);
-    
-    public int size();
-    public Iterator<C> iterator();
-    
+    String author() default "[unknown]";
 }

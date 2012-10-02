@@ -26,7 +26,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.patterns.Pattern;
 import com.sk89q.worldedit.patterns.SingleBlockPattern;
 import com.sk89q.worldedit.regions.Region;
-import me.Laubi.MineMaze.Addons.MazeGenerators.MazeGenerator;
+import me.Laubi.MineMaze.Interfaces.MazeGenerator;
 import me.Laubi.MineMaze.MazeGens.*;
 import static me.Laubi.MineMaze.MineMazePlugin.rnd;
 

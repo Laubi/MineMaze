@@ -17,15 +17,15 @@
 
 package me.Laubi.MineMaze;
 
+import me.Laubi.MineMaze.Interfaces.SizeValidation;
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.regions.Region;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Iterator;
-import me.Laubi.MineMaze.Addons.MazeGenerators.MazeGeneratorHolder;
-import me.Laubi.MineMaze.Addons.SubCommands.SubCommand;
-import me.Laubi.MineMaze.Addons.SubCommands.SubCommandHolder;
+import me.Laubi.MineMaze.Interfaces.MazeGenerator;
+import me.Laubi.MineMaze.Interfaces.SubCommand;
 import me.Laubi.MineMaze.Exceptions.MineMazeException;
-import me.Laubi.MineMaze.Exceptions.PermissionException;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -41,15 +41,15 @@ public class SubCommands {
             description = "You need help? Here you get it!"
     )
     public static void help(LocalPlayer player, CommandHandler handler, MineMazePlugin plugin){
-        Iterator<SubCommandHolder> it = plugin.getSubCollector().iterator();
+        Iterator<Method> it = plugin.getSubCommands().iterator();
         
         
         player.print("All registrated subcommands:");
         while(it.hasNext()){
-            SubCommandHolder cur = it.next();
+            SubCommand cur = it.next().getAnnotation(SubCommand.class);
             
             String msg = "    §9%1: §a: %2";
-            msg = msg.replace("%1", StringUtils.join(cur.getAlias(),"|")).replace("%2",cur.getDescription());
+            msg = msg.replace("%1", StringUtils.join(cur.alias(),"|")).replace("%2",cur.description());
             player.print(msg);
         }
     }
@@ -63,21 +63,21 @@ public class SubCommands {
             description = "List all aviable MazeGenerators"
     )
     public static void listmazes(LocalPlayer player, CommandHandler handler, MineMazePlugin plugin){
-        if(plugin.getMazeCollector().size() == 0){
+        if(plugin.getMazeGenerators().isEmpty()){
             player.printError("No mazes are registrated!");
             return;
         }
         
-        Iterator<MazeGeneratorHolder> it = plugin.getMazeCollector().iterator();
+        Iterator<Method> it = plugin.getMazeGenerators().iterator();
         
         player.print("Registrated maze generators:");
         while(it.hasNext()){
-            MazeGeneratorHolder cur = it.next();
+            MazeGenerator cur = it.next().getAnnotation(MazeGenerator.class);
             
             String msg = "    §9%1 => §a%2";
             msg = msg
-                    .replace("%1", cur.getFullName())
-                    .replace("%2", StringUtils.join(cur.getAlias(),'|'));
+                    .replace("%1", cur.fullName())
+                    .replace("%2", StringUtils.join(cur.alias(),'|'));
             
             player.print(msg);
         }
@@ -92,26 +92,27 @@ public class SubCommands {
     public static void maze(LocalPlayer player, CommandHandler handler, MineMazePlugin plugin){
         final WorldEdit we = plugin.getWorldEdit();
         try{
-            MazeGeneratorHolder holder;
+            Method mazeGen;
             LocalSession session;
             Region r;
             
             r = (session = we.getSession(player)).getSelection(player.getWorld());
             
             if(handler.containsArgument("gen")){
-                holder = plugin.getMazeCollector().getEntry(handler.getArgumentValue("gen"));
+                mazeGen = plugin.getMazeGeneratorByAlias(handler.getArgumentValue("gen"));
             }else{
-                holder = plugin.getMazeCollector().getRandomEntry();
+                mazeGen = plugin.getMazeGenerators().get(MineMazePlugin.rnd.nextInt(plugin.getMazeGenerators().size()));
             }
             
-            if(holder == null) 
+            if(mazeGen == null) 
                 throw new MineMazeException("Could not find the choosen mazegenerator");
             
-            if(!holder.validateRegion(r)) 
+            if(!validateRegion(r, mazeGen)){
                 throw new MineMazeException("Your selection doesn't fit the requirements!");
+            }
             
             try{
-                Maze maze = holder.invoke(player, handler, we, new Maze(r));
+                Maze maze = (Maze) mazeGen.invoke(null, player, handler, we, new Maze(r));
             
                 EditSession edit = session.createEditSession(player);
                 edit.enableQueue();
@@ -154,5 +155,34 @@ public class SubCommands {
             player.printRaw(e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    private static boolean validateRegion(Region r, Method subCmd){
+        int     maxHeight = -1, 
+                maxLength = -1,
+                maxWidth = -1,
+                minHeight = 1,
+                minWidth = 5, 
+                minLength = 5;
+        
+        if(subCmd.isAnnotationPresent(SizeValidation.class)){
+            SizeValidation sizev = subCmd.getAnnotation(SizeValidation.class);
+            maxHeight = sizev.maxHeight();
+            maxLength = sizev.maxLength();
+            maxWidth = sizev.maxWidth();
+            minHeight = sizev.minHeight();
+            minWidth = sizev.minWidth();
+            minLength = sizev.minLength();
+        }
+        
+        
+        return  !(
+                (r.getWidth() < minWidth) || 
+                (r.getHeight() < minHeight) || 
+                (r.getLength() < minLength) ||
+                
+                (maxWidth < 0 ? false : r.getWidth() > maxWidth) ||
+                (maxHeight < 0 ? false : r.getHeight() > maxHeight) ||
+                (maxLength < 0 ? false : r.getLength() > maxLength));
     }
 }
