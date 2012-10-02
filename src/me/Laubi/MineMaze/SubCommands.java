@@ -111,7 +111,7 @@ public class SubCommands {
                 throw new MineMazeException("Your selection doesn't fit the requirements!");
             
             try{
-                Maze maze = holder.invoke(player, handler, we, r);
+                Maze maze = holder.invoke(player, handler, we, new Maze(r));
             
                 EditSession edit = session.createEditSession(player);
                 edit.enableQueue();

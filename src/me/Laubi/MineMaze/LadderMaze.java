@@ -51,8 +51,7 @@ public class LadderMaze {
             fullName = "Laddermaze Generator",
             author = "Laubi",
             minHeight = 5)
-    public static Maze prims(LocalPlayer player, CommandHandler h, WorldEdit we, Region region) throws UnknownItemException, DisallowedItemException, MineMazeException {
-        Maze maze = new Maze(region);
+    public static Maze prims(LocalPlayer player, CommandHandler h, WorldEdit we, Maze maze) throws UnknownItemException, DisallowedItemException, MineMazeException {
         Corner firstLadderCorner = null;
 
         //Defaultvalues

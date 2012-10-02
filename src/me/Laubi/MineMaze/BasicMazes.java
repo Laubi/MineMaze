@@ -43,9 +43,9 @@ public class BasicMazes {
             fullName = "Prims Maze Generator",
             author = "Laubi"
     )
-    public static Maze prims(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
+    public static Maze prims(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze)
             throws UnknownItemException, DisallowedItemException {
-        return genBasicMaze(player, handler, we, region, new Prims(region.getWidth(), region.getLength()));
+        return genBasicMaze(player, handler, we, maze, new Prims(maze.getWidth(), maze.getLength()));
     }
 
     @MazeGenerator(
@@ -53,9 +53,9 @@ public class BasicMazes {
             fullName = "Prims Chaotic Maze Generator",
             author = "Laubi"
     )
-    public static Maze primsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
+    public static Maze primsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze)
             throws UnknownItemException, DisallowedItemException {
-        return genBasicMaze(player, handler, we, region, new PrimsChaos(region.getWidth(), region.getLength()));
+        return genBasicMaze(player, handler, we, maze, new PrimsChaos(maze.getWidth(), maze.getLength()));
     }
 
     @MazeGenerator(
@@ -63,9 +63,9 @@ public class BasicMazes {
             fullName = "DeepFirstSearch Maze Generator",
             author = "Laubi"
     )
-    public static Maze dfs(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
+    public static Maze dfs(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze)
             throws UnknownItemException, DisallowedItemException {
-        return genBasicMaze(player, handler, we, region, new DeepFirstSearch(region.getWidth(), region.getLength()));
+        return genBasicMaze(player, handler, we, maze, new DeepFirstSearch(maze.getWidth(), maze.getLength()));
     }
 
     @MazeGenerator(
@@ -73,14 +73,14 @@ public class BasicMazes {
             fullName = "DeepFirstSearch Chaotic Maze Generator",
             author = "Laubi"
     )
-    public static Maze dfsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region)
+    public static Maze dfsc(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze)
             throws UnknownItemException, DisallowedItemException {
-        return genBasicMaze(player, handler, we, region, new DeepFirstSearchChaos(region.getWidth(), region.getLength()));
+        return genBasicMaze(player, handler, we, maze, new DeepFirstSearchChaos(maze.getWidth(), maze.getLength()));
     }
 
-    private static Maze genBasicMaze(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region, SimpleMazeGenerator gen)
+    private static Maze genBasicMaze(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze, SimpleMazeGenerator gen)
             throws UnknownItemException, DisallowedItemException {
-        Maze maze = new Maze(region);
+        //Maze maze = new Maze(region);
 
         Pattern wallPattern = new SingleBlockPattern(new BaseBlock(BlockID.STONE));
 
@@ -94,9 +94,9 @@ public class BasicMazes {
 
         boolean[][] flatMaze = gen.generateMaze();
 
-        for (int x = 0; x < region.getWidth(); x++) {
-            for (int y = 0; y < region.getHeight(); y++) {
-                for (int z = 0; z < region.getLength(); z++) {
+        for (int x = 0; x < maze.getWidth(); x++) {
+            for (int y = 0; y < maze.getHeight(); y++) {
+                for (int z = 0; z < maze.getLength(); z++) {
                     maze.set(x, y, z, flatMaze[x][z] ? wallPattern.next(x, y, z) : airBlock);
                 }
             }
@@ -105,23 +105,23 @@ public class BasicMazes {
 
 
         if (!handler.containsArgument("nodoors")) {
-            for (int i = 0; i < region.getHeight(); i++) {
+            for (int i = 0; i < maze.getHeight(); i++) {
                 maze.set(0, i, 1, airBlock);
-                maze.set(region.getWidth() - 1, i, region.getLength() - 2, airBlock);
+                maze.set(maze.getWidth() - 1, i, maze.getLength() - 2, airBlock);
 
-                if (region.getWidth() % 2 == 0 || region.getLength() % 2 == 0) {
-                    maze.set(region.getWidth() - 2, i, region.getLength() - 2, airBlock);
+                if (maze.getWidth() % 2 == 0 || maze.getLength() % 2 == 0) {
+                    maze.set(maze.getWidth() - 2, i, maze.getLength() - 2, airBlock);
                 }
-                if (region.getWidth() % 2 == 0 && region.getLength() % 2 == 0) {
-                    maze.set(region.getWidth() - 2, i, region.getLength() - 3, airBlock);
+                if (maze.getWidth() % 2 == 0 && maze.getLength() % 2 == 0) {
+                    maze.set(maze.getWidth() - 2, i, maze.getLength() - 3, airBlock);
                 }
             }
         }
 
         if (handler.containsArgument("bottom")) {
             Pattern floorPattern = we.getBlockPattern(player, handler.getArgumentValue("bottom"));
-            for (int i = 0; i < region.getWidth(); i++) {
-                for (int j = 0; j < region.getLength(); j++) {
+            for (int i = 0; i < maze.getWidth(); i++) {
+                for (int j = 0; j < maze.getLength(); j++) {
                     maze.set(i, 0, j, floorPattern.next(i, 0, j));
                 }
             }
@@ -129,9 +129,9 @@ public class BasicMazes {
 
         if (handler.containsArgument("top")) {
             Pattern roofPattern = we.getBlockPattern(player, handler.getArgumentValue("top"));
-            for (int i = 0; i < region.getWidth(); i++) {
-                for (int j = 0; j < region.getLength(); j++) {
-                    maze.set(i, region.getHeight() - 1, j, roofPattern.next(i, region.getHeight() - 1, j));
+            for (int i = 0; i < maze.getWidth(); i++) {
+                for (int j = 0; j < maze.getLength(); j++) {
+                    maze.set(i, maze.getHeight() - 1, j, roofPattern.next(i, maze.getHeight() - 1, j));
                 }
             }
         }
@@ -143,9 +143,9 @@ public class BasicMazes {
 
             he += (handler.containsArgument("bottom") ? 1 : 0);
 
-            if (he <= region.getHeight() && he > 0) {
-                for (int i = 1; i < region.getWidth() - 1; i++) {
-                    for (int j = 1; j < region.getLength() - 1; j++) {
+            if (he <= maze.getHeight() && he > 0) {
+                for (int i = 1; i < maze.getWidth() - 1; i++) {
+                    for (int j = 1; j < maze.getLength() - 1; j++) {
                         if (rnd.nextInt(100) < p && maze.get(i, he - 1, j) == airBlock) {
                             if (maze.get(i - 1, he - 1, j) != airBlock
                                     || maze.get(i + 1, he - 1, j) != airBlock

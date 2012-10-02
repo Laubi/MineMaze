@@ -69,7 +69,7 @@ public class MazeGeneratorHolder {
         return this.getAnnotation().maxHeight();
     }
     
-    public Maze invoke(LocalPlayer player, CommandHandler handler, WorldEdit we, Region region) 
+    public Maze invoke(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze region) 
             throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         return (Maze)this.m.invoke(null, player, handler, we, region);
     }
