@@ -17,15 +17,14 @@
 
 package me.Laubi.MineMaze;
 
-import me.Laubi.MineMaze.Interfaces.SizeValidation;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.regions.Region;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import me.Laubi.MineMaze.Interfaces.MazeGenerator;
-import me.Laubi.MineMaze.Interfaces.SubCommand;
 import me.Laubi.MineMaze.Exceptions.MineMazeException;
+import me.Laubi.MineMaze.Interfaces.MazeGenerator;
+import me.Laubi.MineMaze.Interfaces.SizeValidation;
+import me.Laubi.MineMaze.Interfaces.SubCommand;
 import org.apache.commons.lang.StringUtils;
 
 /**

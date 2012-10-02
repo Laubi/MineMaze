@@ -17,7 +17,6 @@
 
 package me.Laubi.MineMaze;
 
-import me.Laubi.MineMaze.Interfaces.SizeValidation;
 import com.sk89q.worldedit.DisallowedItemException;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.UnknownItemException;
@@ -26,10 +25,10 @@ import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.patterns.Pattern;
 import com.sk89q.worldedit.patterns.SingleBlockPattern;
-import com.sk89q.worldedit.regions.Region;
 import java.awt.Point;
-import me.Laubi.MineMaze.Interfaces.MazeGenerator;
 import me.Laubi.MineMaze.Exceptions.MineMazeException;
+import me.Laubi.MineMaze.Interfaces.MazeGenerator;
+import me.Laubi.MineMaze.Interfaces.SizeValidation;
 import me.Laubi.MineMaze.MazeGens.DeepFirstSearch;
 import me.Laubi.MineMaze.MazeGens.Prims;
 import me.Laubi.MineMaze.MazeGens.SimpleMazeGenerator;

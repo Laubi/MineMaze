@@ -23,6 +23,7 @@ package me.Laubi.MineMaze.Exceptions;
  * @author Laubi
  */
 public class PermissionException extends MineMazeException {
+    private static final long serialVersionUID = 134928757197914545L;
     private String permission;
     
     public PermissionException() {

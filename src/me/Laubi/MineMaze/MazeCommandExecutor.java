@@ -19,10 +19,10 @@ package me.Laubi.MineMaze;
 
 import com.sk89q.worldedit.LocalPlayer;
 import java.lang.reflect.Method;
-import me.Laubi.MineMaze.Interfaces.SubCommand;
 import me.Laubi.MineMaze.Exceptions.ConsoleForbiddenException;
 import me.Laubi.MineMaze.Exceptions.PermissionException;
 import me.Laubi.MineMaze.Exceptions.SubCommandNotFoundException;
+import me.Laubi.MineMaze.Interfaces.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

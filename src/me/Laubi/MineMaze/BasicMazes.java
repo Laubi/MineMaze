@@ -25,7 +25,6 @@ import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.patterns.Pattern;
 import com.sk89q.worldedit.patterns.SingleBlockPattern;
-import com.sk89q.worldedit.regions.Region;
 import me.Laubi.MineMaze.Interfaces.MazeGenerator;
 import me.Laubi.MineMaze.MazeGens.*;
 import static me.Laubi.MineMaze.MineMazePlugin.rnd;
@@ -80,14 +79,11 @@ public class BasicMazes {
 
     private static Maze genBasicMaze(LocalPlayer player, CommandHandler handler, WorldEdit we, Maze maze, SimpleMazeGenerator gen)
             throws UnknownItemException, DisallowedItemException {
-        //Maze maze = new Maze(region);
 
         Pattern wallPattern = new SingleBlockPattern(new BaseBlock(BlockID.STONE));
 
         if (handler.containsArgument("mat")) {
             wallPattern = we.getBlockPattern(player, handler.getArgumentValue("mat"));
-            if (wallPattern == null) {
-            }
         }
 
 
