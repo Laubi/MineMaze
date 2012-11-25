@@ -45,11 +45,12 @@ public class MazeCommandExecutor implements CommandExecutor{
             CommandHandler cmdHandler = new CommandHandler(strings);
 
             Method subCommand = this.plugin.getSubCommandByAlias(cmdHandler.getSubCommand());
-            SubCommand subCmd = subCommand.getAnnotation(SubCommand.class);
             
             if(subCommand == null){
                 throw new SubCommandNotFoundException(cmdHandler.getSubCommand());
             }
+            SubCommand subCmd = subCommand.getAnnotation(SubCommand.class);
+            
             if(!player.isPlayer() && !subCmd.console()){
                 throw new ConsoleForbiddenException();
             }
